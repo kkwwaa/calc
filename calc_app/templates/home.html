@@ -1,0 +1,253 @@
+{% load i18n %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sqroot</title>
+    <style>
+        html, body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+
+        /* Стиль для блока приветствия с градиентом */
+        .header {
+            background: linear-gradient(to bottom, #B984EB, #FFBC6B 80%, white);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            text-shadow: 2px 2px 5px black;
+            font-size: 2rem;
+            flex-direction: column;
+        }
+
+        .btn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+            border: none;
+        }
+
+
+        .calculator-section {
+            padding: 30px;
+            background-color: #f9f9f9; /* Светлый фон секции */
+            border-radius: 8px;
+            box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+            margin: 0 auto;
+            max-width: 600px; /* Максимальная ширина секции */
+            text-align: center;
+        }
+
+        .form-container {
+            margin-bottom: 30px; /* Отступ между формами */
+            background-color: #ffffff; /* Белый фон для каждой формы */
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #333; /* Темный цвет текста заголовка */
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px; /* Отступ между элементами формы */
+        }
+
+        input[type="number"], input[type="text"], select {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+
+        input[type="number"]::placeholder, input[type="text"]::placeholder {
+            color: #aaa; /* Цвет плейсхолдера */
+        }
+
+        select {
+            font-size: 16px;
+        }
+
+        button.btn {
+            background-color: #8A2BE2;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin-top: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+            border: none;
+        }
+
+        button.btn-large {
+            background-color: #8A2BE2; /* Фиолетовый цвет кнопки */
+            color: white;
+            padding: 20px 40px; /* Увеличены отступы */
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 24px; /* Увеличен размер шрифта */
+            margin-top: 20px; /* Увеличен отступ сверху */
+            cursor: pointer;
+            border-radius: 10px; /* Более крупные скругления */
+            border: none;
+        }
+        button.btn-large:hover {
+            background-color: #FF8C00; /* Темнее цвет при наведении */
+        }
+
+        button.btn:hover {
+            background-color: #FF8C00; /* Темнее цвет при наведении */
+        }
+
+        /* Большой отступ внизу страницы */
+        .footer-space {
+            height: 200px;
+            background-color: white; /* Белый фон для отступа */
+        }
+
+        .header h1 {
+            color: white;
+        }
+
+            .purple {
+        color: #8A2BE2; /* Фиолетовый цвет для Sqroot */
+        }
+
+        .language-form {
+            background-color: #B984EB; /* Черный фон */
+
+        }
+
+        .language-select {
+            background-color: #B984EB; /* Фиолетовый цвет фона для select */
+            color: white; /* Цвет текста */
+            border: 1px solid white; /* Фиолетовая граница */
+            border-radius: 4px; /* Скругленные углы */
+            padding: 8px; /* Внутренние отступы */
+            font-size: 16px; /* Размер шрифта */
+        }
+
+        /* Стиль для футера */
+        .footer {
+            background-color: #B984EB; /* Фон футера */
+            color: white; /* Цвет текста */
+            text-align: center; /* Центрирование текста */
+            padding: 20px; /* Отступы внутри футера */
+            position: relative;
+        }
+
+        /* Контейнер для ссылок в футере */
+        .footer-links {
+            margin-top: 10px; /* Отступ от авторских прав */
+        }
+
+        /* Стиль для ссылок в футере */
+        .footer-link {
+            color: white; /* Цвет текста ссылок */
+            text-decoration: none; /* Убираем подчеркивание */
+            margin: 0 10px; /* Отступы между ссылками */
+            font-size: 16px; /* Размер шрифта */
+            transition: color 0.3s ease; /* Плавное изменение цвета при наведении */
+        }
+
+        /* Изменение цвета ссылок при наведении */
+        .footer-link:hover {
+            color: #FFBC6B; 
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- Языковой блок -->
+    <form method="post" action="{% url 'set_language' %}" class="language-form">
+    {% csrf_token %}
+    <input type="hidden" name="next" value="{{ request.path }}">
+    <select name="language" class="language-select" onchange="this.form.submit()">
+        <option value="en" {% if request.LANGUAGE_CODE == 'en' %}selected{% endif %}>English</option>
+        <option value="ru" {% if request.LANGUAGE_CODE == 'ru' %}selected{% endif %}>Русский</option>
+        <option value="es" {% if request.LANGUAGE_CODE == 'es' %}selected{% endif %}>Spanish</option>
+        <option value="fr" {% if request.LANGUAGE_CODE == 'fr' %}selected{% endif %}>Français</option>
+    </select>
+    </form>
+
+
+
+    <!-- Блок приветствия с градиентом -->
+    <div class="header">
+        <h1>{% trans "Привет! Меня зовут" %} <span class="purple">Sqroot</span></h1>
+        <h1>{% trans "Я умею извлекать корни" %}</h1>
+        <p>{% trans "Нажми далее, если хочешь опробовать меня!" %}</p>
+        <button class="btn-large purple-btn" onclick="scrollToCalculator()">{% trans "Далее" %}</button>
+
+    </div> 
+<!-- Секция с калькулятором -->
+<div class="calculator-section" id="calculator">
+    <div class="form-container">
+        <h1>{% trans "Введите действительное число" %}</h1>
+        <form method="post" action="{% url 'home' %}" class="calculator-form">
+            {% csrf_token %}
+            <div class="form-group">
+                <input type="number" id="numberInput" name="number" placeholder="Введите число" step="any" required>
+                <label for="precision">{% trans "Знаков после запятой:" %}</label>
+                <select id="precision" name="precision">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                </select>
+            </div>
+            <button type="submit" class="btn">{% trans "Извлечь корень" %}</button>
+        </form>
+    </div>
+
+
+</div>
+
+<!-- Большой белый отступ внизу страницы -->
+<div class="footer-space"></div>
+
+<!-- Добавляем футер с авторскими правами c форумом и док -->
+<footer class="footer">
+    <p>&copy; 2024 Sqroot. Все права защищены.</p>
+    <div class="footer-links">
+        <a href="https://1drv.ms/f/c/5f4d2b25cf9a6029/EmNYsMgTTQtKs6WJMnMXiQkBTZ72kDyl0qaslFIih-Fedg?e=nqvJY1" class="footer-link">{% trans "Документация" %}</a>
+        <a href="https://vk.com/sqroothelper" class="footer-link">{% trans "Форум" %}</a>
+    </div>
+</footer>
+
+
+    <script>
+        function scrollToCalculator() {
+            document.getElementById('calculator').scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
+
+

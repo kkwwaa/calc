@@ -1,0 +1,68 @@
+{% load i18n %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sqroot_result</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+            background: radial-gradient(circle, #B984EB, #FFBC6B); /* градиент */
+            height: 100vh; /* Высота фона на всю высоту окна браузера */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .result-box {
+            padding: 30px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            display: inline-block;
+            margin-bottom: 50px; /* Добавляем отступ внизу для кнопки */
+        }
+
+        .btn {
+            background-color: #8A2BE2; /* Фиолетовый цвет кнопки */
+            color: white;
+            padding: 20px 40px; /* Увеличены отступы */
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 24px; /* Увеличен размер шрифта */
+            margin-top: 20px; /* Увеличен отступ сверху */
+            cursor: pointer;
+            border-radius: 10px; /* Более крупные скругления */
+            border: none;
+        }
+        .btn:hover {
+            background-color: #FF8C00; /* Темнее цвет при наведении */
+        }
+        
+
+    </style>
+</head>
+<body>
+    <div class="result-box">
+        {% if result %}
+            <h1>{% trans "Квадратный корень числа" %}</h1>
+            <h1>√{{ number }}: {{ sign }}{{ result }}</h1>
+        {% elif error %}
+            <h1>{{ error }}</h1>
+        {% endif %}
+    </div>
+
+    <a href="{% url 'home' %}" class="btn">{% trans "Еще раз!" %}</a>
+
+</body>
+</html>
+
+
+
