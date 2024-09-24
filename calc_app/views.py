@@ -1,16 +1,22 @@
 from django.shortcuts import render
-from sympy import sympify, sqrt
+#from sympy import sympify, sqrt
 import math
 import cmath
-from django.conf.urls import handler404
+from django.conf.urls import handler404, handler403, handler500
 from django.shortcuts import render
 
-# Определение представления для 404 ошибки
+def custom_500(request):
+    return render(request, '404.html', status=500)
+
+def custom_403(request, exception):
+    return render(request, '404.html', status=403)
+
 def custom_page_not_found(request, exception):
     return render(request, '404.html', status=404)
 
-# Настройка обработчика 404
 handler404 = 'calc.urls.custom_page_not_found'
+handler500 = 'calc.urls.custom_500'
+handler403 = 'calc.urls.custom_403'
 
 
 
@@ -23,19 +29,32 @@ def home(request):
 
             try:
                 # Преобразуем введенное значение в float
-                number = float(number)
+                if ('.' in number):
+                    number = float(number)
+                else:
+                    number = int(number)
 
                 # Извлекаем корень из числа
                 if number > 0:
                     result = math.sqrt(number)
                     result = round(result, precision)  # Округляем до нужной точности
+                    
+                     # Обрабатываем числа, близкие к нулю, для корректного отображения
+                    if result < 10**-precision:  # Если результат близок к нулю
+                        result = format(result, f".{precision}f")  # Форматируем с нужной точностью
+                    else:
+                        result = int(result) if result.is_integer() else result
+
+                     
+                    return render(request, 'result.html', {'result': result, 'sign': '±', 'number': number})
+                    
                     result = int(result) if result.is_integer() else result
                     number = int(number) if number.is_integer() else number
                     
                     return render(request, 'result.html', {'result': result, 'sign': '±','number': number})
                 elif number==0:
                     return render(request, 'result.html', {'result': '0','number': '0', 'sign': ''})
-                else:
+                elif number < 0:
                     result = cmath.sqrt(number)
                     result = complex(round(result.real, precision), round(result.imag, precision))
                     number = int(number) if number.is_integer() else round(number)
@@ -44,22 +63,6 @@ def home(request):
             except ValueError:
                 # Обработка некорректных чисел
                 return render(request, 'result.html', {'error': 'Некорректное число'})
-
-        elif 'expression' in request.POST:
-            # Обработка формы с выражением
-            expression = request.POST.get('expression')
-
-            try:
-                # Преобразуем строку в математическое выражение с помощью sympy
-                expr = sympify(expression)
-                result = sqrt(expr)
-
-                # Выводим результат
-                return render(request, 'result.html', {'result': result})
-
-            except Exception as e:
-                # Если произошла ошибка в выражении
-                return render(request, 'result.html', {'error': f'Некорректное выражение: {str(e)}'})
 
     # Если это GET-запрос, рендерим домашнюю страницу
     return render(request, 'home.html')
