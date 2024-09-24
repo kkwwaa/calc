@@ -57,7 +57,7 @@ def home(request):
                 elif number < 0:
                     result = cmath.sqrt(number)
                     result = complex(round(result.real, precision), round(result.imag, precision))
-                    number = int(number) if number.is_integer() else round(number)
+                    
                     return render(request, 'result.html', {'result': result, 'sign': '±','number': number})
             
             except ValueError:
